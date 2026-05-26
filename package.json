@@ -1,0 +1,12 @@
+{
+    "name": "mental-wellness-bot",
+    "version": "1.0.0",
+    "description": "Root project to run frontend and backend concurrently",
+    "scripts": {
+        "install:all": "cd client && npm install && cd ../server && npm install",
+        "dev": "concurrently \"cd server && npx nodemon index.js\" \"cd client && npm run dev\""
+    },
+    "devDependencies": {
+        "concurrently": "^8.2.2"
+    }
+}
