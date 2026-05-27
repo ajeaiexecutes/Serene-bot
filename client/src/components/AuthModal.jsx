@@ -12,7 +12,7 @@ export default function AuthModal({ onClose }) {
     const [msg, setMsg] = useState('');
     const [isLoading, setIsLoading] = useState(false);
 
-    const API_URL = 'http://localhost:4000/api/auth';
+    const API_URL = `${import.meta.env.VITE_API_URL || 'http://localhost:4000'}/api/auth`;
 
     const handleAction = async (endpoint, payload) => {
         setIsLoading(true);

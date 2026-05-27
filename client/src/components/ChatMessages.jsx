@@ -14,7 +14,7 @@ function ChatMessages({ messages, isLoading }) {
     if (!messages || messages.length === 0) return null
 
     return (
-        <div className="w-full max-w-[993px] px-4 md:px-0 mb-6 flex flex-col gap-4 z-20">
+        <div className="w-full max-w-[993px] px-4 md:px-8 lg:px-12 mb-6 flex flex-col gap-4 z-20">
             {messages.map((msg, index) => {
                 const isUser = msg.role === 'user'
 

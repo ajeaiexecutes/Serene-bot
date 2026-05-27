@@ -21,20 +21,21 @@ provide this resource immediately: iCall India: 9152987821 (icallhelpline.org),
 then stay present — do not abandon the conversation.
 Tone: warm, unhurried, present, gentle. Like a wise, caring friend.`;
 
-export async function getAIResponse(messages) {
+export async function getAIResponseStream(messages) {
     const formattedMessages = [
         { role: 'system', content: SYSTEM_PROMPT },
         ...messages.map(m => ({ role: m.role, content: m.content }))
     ];
 
     try {
-        const completion = await openai.chat.completions.create({
+        const stream = await openai.chat.completions.create({
             model: 'llama-3.3-70b-versatile',
-            messages: formattedMessages
+            messages: formattedMessages,
+            stream: true
         });
-        return completion.choices[0].message.content;
+        return stream;
     } catch (error) {
-        console.error('Error fetching AI response:', error);
+        console.error('Error fetching AI response stream:', error);
         throw error;
     }
 }

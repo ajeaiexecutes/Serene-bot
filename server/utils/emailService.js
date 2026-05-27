@@ -30,11 +30,12 @@ export async function sendOtpEmail(email, otp, type) {
         });
 
         await transporter.sendMail({
-            from: `"Serene Support" <${process.env.SMTP_USER}>`,
+            from: `"Serene Support" <${process.env.EMAIL_FROM || process.env.SMTP_USER}>`,
             to: email,
             subject,
             text: textbody,
         });
+        
         return true;
     } catch (error) {
         console.error('Error sending email:', error);

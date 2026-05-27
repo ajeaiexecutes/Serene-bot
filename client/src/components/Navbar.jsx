@@ -2,23 +2,18 @@ import toolkitIcon from '../assets/toolkit-icon.png'
 import { useAuth } from '../context/AuthContext'
 import { toast } from 'sonner'
 
-function Navbar() {
-  const { user, logout } = useAuth();
+function Navbar({ onToggleSidebar }) {
+  const { user } = useAuth();
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-5 md:px-[55px] md:pt-[60px] pointer-events-none">
+    <nav className="fixed top-0 left-0 right-0 z-40 flex items-center justify-between px-6 py-5 md:px-[55px] md:pt-[60px] pointer-events-none">
 
       {/* Hamburger / User - LEFT */}
-      <div className="flex gap-2 pointer-events-auto">
-        <button className="w-[40px] h-[40px] rounded-full bg-white shadow-md flex flex-col items-center justify-center gap-[6px] cursor-pointer border border-[#F0F0F0]">
+      <div className="flex gap-2 pointer-events-auto md:hidden">
+        <button onClick={onToggleSidebar} className="w-[40px] h-[40px] rounded-full bg-white shadow-md flex flex-col items-center justify-center gap-[6px] cursor-pointer border border-[#F0F0F0]">
           <span className="block w-[16px] h-[2px] bg-[#666] rounded-full" />
           <span className="block w-[11px] h-[2px] bg-[#666] rounded-full self-start ml-[11px]" />
         </button>
-        {user && (
-          <button onClick={logout} className="h-[40px] px-4 rounded-full bg-white shadow-md flex items-center justify-center cursor-pointer border border-[#F0F0F0] text-[#666] font-sf text-[13px] hover:text-[#ff4444]">
-            Logout {user.name?.split(' ')[0]}
-          </button>
-        )}
       </div>
 
       {/* Comfort Toolkit - RIGHT */}

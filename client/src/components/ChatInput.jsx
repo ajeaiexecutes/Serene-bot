@@ -18,7 +18,7 @@ function ChatInput({ onSend, isLoading }) {
   }
 
   return (
-    <div className="w-full max-w-[993px] px-4 md:px-0 mb-4 z-20">
+    <div className="w-full max-w-[993px] px-4 md:px-8 lg:px-12 mb-4 z-20">
 
       {/* Card */}
       <div className="w-full h-auto md:h-[152px] bg-white border border-[#DDDDDD] rounded-[18px] shadow-card flex flex-col justify-between p-4 md:p-5">
