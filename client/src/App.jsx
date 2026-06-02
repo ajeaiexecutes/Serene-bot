@@ -84,42 +84,51 @@ function App() {
       while (!isDone) {
         const { value, done: readerDone } = await reader.read()
         isDone = readerDone
+        
         if (value) {
-          buffer += decoder.decode(value, { stream: true })
-          const parts = buffer.split('\n\n')
-          buffer = parts.pop() || '' // Keep the last incomplete part in the buffer
+          buffer += decoder.decode(value, { stream: !isDone })
+        } else if (isDone) {
+          buffer += decoder.decode()
+        }
+
+        const parts = buffer.split('\n\n')
+        
+        // If not done, keep the last incomplete part in the buffer.
+        // If done, we want to process everything, so buffer becomes empty.
+        buffer = isDone ? '' : (parts.pop() || '')
+        
+        for (const part of parts) {
+          if (!part.trim()) continue
           
-          for (const part of parts) {
-            const lines = part.split('\n')
-            for (const line of lines) {
-              if (line.startsWith('data: ')) {
-                const dataStr = line.slice(6)
-                try {
-                  const data = JSON.parse(dataStr)
-                  
-                  if (data.type === 'session') {
-                    if (data.sessionId !== streamSessionId) {
-                      streamSessionId = data.sessionId
-                      setSessionId(data.sessionId)
-                      localStorage.setItem('sereneSessionId', data.sessionId)
-                      setRefreshSidebar(prev => prev + 1)
-                    }
-                  } else if (data.type === 'chunk') {
-                    setMessages(prev => {
-                      const newMessages = [...prev]
-                      const lastIndex = newMessages.length - 1
-                      newMessages[lastIndex] = {
-                        ...newMessages[lastIndex],
-                        content: newMessages[lastIndex].content + data.text
-                      }
-                      return newMessages
-                    })
-                  } else if (data.type === 'done') {
-                    // Stream finished
+          const lines = part.split('\n')
+          for (const line of lines) {
+            if (line.startsWith('data: ')) {
+              const dataStr = line.slice(6)
+              try {
+                const data = JSON.parse(dataStr)
+                
+                if (data.type === 'session') {
+                  if (data.sessionId !== streamSessionId) {
+                    streamSessionId = data.sessionId
+                    setSessionId(data.sessionId)
+                    localStorage.setItem('sereneSessionId', data.sessionId)
+                    setRefreshSidebar(prev => prev + 1)
                   }
-                } catch (e) {
-                  console.error('Error parsing stream chunk', e)
+                } else if (data.type === 'chunk') {
+                  setMessages(prev => {
+                    const newMessages = [...prev]
+                    const lastIndex = newMessages.length - 1
+                    newMessages[lastIndex] = {
+                      ...newMessages[lastIndex],
+                      content: newMessages[lastIndex].content + data.text
+                    }
+                    return newMessages
+                  })
+                } else if (data.type === 'done') {
+                  // Stream finished
                 }
+              } catch (e) {
+                console.error('Error parsing stream chunk', e, 'Data string:', dataStr)
               }
             }
           }

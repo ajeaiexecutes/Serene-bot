@@ -35,6 +35,7 @@ router.post('/', requireAuth, async (req, res) => {
         res.setHeader('Content-Type', 'text/event-stream')
         res.setHeader('Cache-Control', 'no-cache')
         res.setHeader('Connection', 'keep-alive')
+        res.setHeader('X-Accel-Buffering', 'no') // Disable proxy buffering on Render/Nginx
 
         // Send session ID first
         res.write(`data: ${JSON.stringify({ type: 'session', sessionId: currentSessionId })}\n\n`)
